@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+<button id="start-game">BUTTON BUTTON WHATS YOUR FUNCTION?</button>
+<script type="text/javascript">
+	// //Prompt user to input Rocks, Paper, or Scissors
+	// var userChoice = prompt("Rock, Paper, Scissors?")
+	// //Computer chooses Rocks, Paper or Scissors
+	// var cpuChoice =  Math.random();
+	// if (cpuChoice < 0.33){
+	// 	cpuChoice = "rock";
+	// } else if (cpuChoice <= 0.66){
+	// 	cpuChoice = "paper";
+	// } else {
+	// 	cpuChoice = "scissors";
+	// }
+	// //compare and alert winner
+	// //if user input equals Rock and Computer equals scissors- User Wins
+	// //Else if user input equals scissors and Computer equals paper - User wins. so on
+	// if (userChoice === cpuChoice){
+	// 	return "tie";
+	// } else if (userChoice === "rock" && cpuChoice === "paper"){
+	// 	return "Computer Wins";
+	// } else if (userChoice === "paper" && cpuChoice === "scissors"){
+	// 	return "Computer Wins";
+	// } else if (userChoice == "scissors" && cpuChoice === "rock"){
+	// 	return "Computer Wins"
+	// } else {
+	// 	return "You WIN!"
+	// }
+	
+
+document.getElementById("start-game").onclick = playTournament;
+
+// user select rocks, paper or scissors
+function getUserChoice(){
+    var userSelection = prompt("Do you choose rock, paper or scissors?");
+    var validation = userSelection.toLowerCase();
+    if (validation !== 'rock' && validation !== 'rocks' && validation !== 'paper' && validation !== 'papers' && validation !== 'scissors' && validation !== 'scissor'){
+    	prompt("Try again, buddy!");
+    }
+    return userSelection;
+}
+
+// get computer choice
+function getComputerChoice(){
+    var computerSelection = Math.random();
+    if (computerSelection < 0.34) {
+        computerSelection = "rock";
+    } else if(computerSelection <= 0.67) {
+        computerSelection = "paper";
+    } else {
+        computerSelection = "scissors";
+    }
+    alert("Computer chose " + computerSelection);
+    return computerSelection;
+}
+
+// Get winnder
+function getWinner(computer, user){
+    if (computer === user ) {
+        return "Tie";
+    } else if ( (computer === "rock" && user == "scissors") || (computer === "paper" && user == "rock") || (computer === "scissors" && user == "paper") ){
+        return "Computer";
+    }else {
+        return("User");
+    }
+}
+
+function runProgram(){
+        var userSelection = getUserChoice();
+        var computerSelection = getComputerChoice();
+        var winner = getWinner(computerSelection, userSelection);
+        alert("Winner is "+ winner);
+        return winner;
+}
+
+function playTournament(){
+    var userScore = 0;
+    var computerScore = 0;
+    var winningScore = prompt("How many games until you win?")
+    while (userScore < winningScore && computerScore < winningScore){
+        var gameWinner = runProgram();
+
+        if (gameWinner === "Computer"){
+            computerScore++;
+            alert("Computer won round");
+        } else if (gameWinner === "User"){
+            userScore++;
+            alert("User won round");
+        }  else {
+            alert("Round was tie");
+        }
+    }
+
+    if (userScore > computerScore){
+        alert("User Wins.  Score: Computer-" + computerScore + " User-" + userScore); 
+    } else{
+        alert("Computer Wins.  Score: Computer-" + computerScore + " User-" + userScore);
+    }
+
+}
+
+
+</script>
+
+</body>
+</html>
