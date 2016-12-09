@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="images/s_icon.png">
+
+    <title>Spontaneous</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="bootstrap-3.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="bootstrap-3.3.7/docs/examples/cover/cover.css" rel="stylesheet">
+
+    <!-- JTinder CSS -->
+    <link rel="stylesheet" type="text/css" href="jTinder/css/jTinder.css">
+  </head>
+
+  <body>
+    <div class="site-wrapper">
+
+      <div class="site-wrapper-inner">
+
+        <div class="cover-container">
+
+          <div class="masthead clearfix">
+            <div class="inner">
+              <nav>
+                <ul class="nav masthead-nav">
+                  <li><a href="index.html">Home</a></li>
+                  <li class="active"><a href="events.html">Events</a></li>
+                  <li><a href="#">About</a></li>
+                </ul>
+              </nav>
+            </div>
+          </div> <!-- close masthead clearfix -->
+
+          <div class="inner cover">
+            <h1 class="cover-heading">What's Going On?</h1>
+            <p class="lead">Tell us where you are and we'll let you know what's going on nearby</p>
+            <form id="search-form" class="col-md-4 col-md-offset-4" accept-charset="UTF-8" method="get">
+              <input name="utf8" type="hidden" value="&#x2713;" />
+            <div class="input-group">
+              <input type="text" name="search" id="location" autofocus="autofocus" placeholder="Here or There?" class="form-control" value />
+              <span class="input-group-btn">
+                <button name="button" type="button" class="btn btn-default" id="searchButton">Search
+                </button>          
+              </span>
+            </div>
+            </form>
+          </div> <!-- close inner cover -->
+
+          <div id="tinderslide" style="display:none;">
+              <ul></ul>
+          </div> <!-- close tinderslide -->
+
+          <div class="mastfoot">
+            <div class="inner">
+              <p>&copy 2016 SpontaneoUS</p>
+            </div>
+          </div> <!-- close mastfoot -->
+
+        </div> <!-- close cover-container -->
+
+      </div>  <!-- close site-wrapper-inner -->
+
+    </div>  <!-- close site-wrapper -->
+
+    <!-- BOOTSTRAP CORE JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
+    <script src="bootstrap-3.3.7/dist/js/bootstrap.min.js"></script>
+
+    <!-- EVENTFUL API -->
+    <script type="text/javascript" src="http://api.eventful.com/js/api"></script>
+
+    <!-- JTINDER JS -->
+    <!-- transform2d lib -->
+    <script type="text/javascript" src="jTinder/js/jquery.transform2d.js"></script>
+    <!-- jTinder lib -->
+    <script type="text/javascript" src="jTinder/js/jquery.jTinder.js"></script>
+
+    <!-- MAIN JS -->
+    <script type="text/javascript">
+      //API Call to fetch events in a searched location
+      function fetchEvents() {
+        $("#tinderslide").css("display", "block");
+        var app_key = "WxxTMmkSkHKZp6JH";
+        var location = document.getElementById("location");
+        var oArgs = {
+          app_key: "WxxTMmkSkHKZp6JH",
+          location: location.value,
+          page_size: 15,
+          date: "Today"
+        };
+        EVDB.API.call("/events/search", oArgs, function(data) {
+          var counter = 1;
+          console.log("counter: " + counter);
+          // alert("your myObject is " + JSON.stringify(oData));
+          // Log response to ensure its working:
+          console.log(data);
+          data.events.event.forEach(function(event){
+            console.log(event);
+
+           //save response to eventDescription for access
+            var eventDescription = {
+              title: event.title,
+              image: event.image ? event.image.medium.url : "http://www.hardwickagriculture.org/blog/wp-content/uploads/placeholder.jpg"
+              // description: event.description || "Test",
+              // start: event.start_time
+            };
+            var paneNum = "pane" + counter;
+            displayEvent(eventDescription.title, eventDescription.image, paneNum);
+
+            counter ++;
+          });
+
+          // load tinder slide rules after all of the events have been added to the page
+          // <!-- jTinder initialization script -->
+          $("#tinderslide").jTinder();
+          // $("#tinderslide").jTinder({
+          //   onDislike: function (item) {
+          //       alert('Dislike image ' + (item.index()+1));
+          //   },
+          //   onLike: function (item) {
+          //       alert('Like image ' + (item.index()+1));
+          //   },
+          //   animationRevertSpeed: 200,
+          //   animationSpeed: 400,
+          //   threshold: 1,
+          //   likeSelector: '.like',
+          //   dislikeSelector: '.dislike'
+          // });
+        });
+      };
+
+      //Function to display API response to page
+      var displayEvent = function(title, imageUrl, pane){
+        var $html =  $('<li class='+ pane +'>' +
+                        '<div class="img"></div>' +
+                        '<div>'+title+'</div>' +
+                        '<div class="like"></div>' +
+                        '<div class="dislike"></div>' +
+                       '</li>');
+        $html.find(".img").css({"background": 'url(' + imageUrl + ') no-repeat scroll center center', "background-size": "cover"});
+        $("#tinderslide ul").append($html);
+
+      }
+
+      $("#searchButton").click(function(e){
+        e.preventDefault();
+        fetchEvents();
+        $("#location").val("");
+      })
+
+    </script>
+
+  </body>
+</html>

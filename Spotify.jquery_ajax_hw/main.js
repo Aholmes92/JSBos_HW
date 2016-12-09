@@ -1,3 +1,14 @@
+
+
+
+
+
+
+
+
+
+
+
 // find template and compile it
 var resultsPlaceholder = $('#results'),
     playingCssClass = 'playing',
